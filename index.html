@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#101a15" />
+  <title>Lingango Admin Helper</title>
+  <meta name="description" content="Clickable command helper for the Lingango Minecraft Forge 1.20.1 server." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="background-glow glow-one"></div>
+  <div class="background-glow glow-two"></div>
+
+  <header class="hero shell">
+    <div class="hero-copy">
+      <div class="eyebrow">Minecraft Forge 1.20.1 · Lingango</div>
+      <h1><span aria-hidden="true">🐸</span> Admin Helper</h1>
+      <p class="hero-text">A clickable command book for running the server without having to remember every slash command.</p>
+      <div class="server-badges">
+        <span>Forge 47.4.20</span>
+        <span>466-mod pack</span>
+        <span>Admin + mod tools</span>
+      </div>
+    </div>
+    <div class="hero-actions">
+      <button class="icon-button" id="themeToggle" type="button" aria-label="Toggle light and dark theme">☀️</button>
+      <a class="secondary-button" href="https://github.com/jittersthegoblin/Helper" target="_blank" rel="noreferrer">GitHub ↗</a>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="notice-card">
+      <strong>Important:</strong> commands marked <span class="inline-badge op">OP</span> need operator permissions. Some mod commands can be disabled in server config. Commands marked <span class="inline-badge danger">Danger</span> can affect many players, chunks, or server data — read them before copying.
+    </section>
+
+    <section class="quick-section" aria-labelledby="quick-title">
+      <div class="section-heading">
+        <div>
+          <p class="kicker">One-click copies</p>
+          <h2 id="quick-title">Quick actions</h2>
+        </div>
+        <p>These copy a ready-to-use command straight to your clipboard.</p>
+      </div>
+      <div class="quick-grid" id="quickGrid"></div>
+    </section>
+
+    <section class="command-section" aria-labelledby="command-title">
+      <div class="section-heading command-heading">
+        <div>
+          <p class="kicker">Command library</p>
+          <h2 id="command-title">Find a command</h2>
+        </div>
+        <div class="result-count" id="resultCount" aria-live="polite"></div>
+      </div>
+
+      <div class="toolbar">
+        <label class="search-wrap">
+          <span class="search-icon" aria-hidden="true">⌕</span>
+          <span class="sr-only">Search commands</span>
+          <input id="searchInput" type="search" autocomplete="off" placeholder="Search: teleport, ban, chunks, weather, quest…" />
+          <kbd>/</kbd>
+        </label>
+        <button class="filter-button" id="favoritesToggle" type="button">☆ Favorites</button>
+        <button class="filter-button" id="dangerToggle" type="button">⚠ Danger only</button>
+      </div>
+
+      <div class="category-row" id="categoryRow" aria-label="Command categories"></div>
+
+      <div class="empty-state" id="emptyState" hidden>
+        <div class="empty-icon">🐸</div>
+        <h3>No commands found</h3>
+        <p>Try a different search or clear the filters.</p>
+        <button class="secondary-button" id="clearFilters" type="button">Clear filters</button>
+      </div>
+
+      <div class="command-grid" id="commandGrid"></div>
+    </section>
+
+    <section class="tips-grid">
+      <article class="tip-card">
+        <div class="tip-icon">⌨️</div>
+        <div>
+          <h3>Use Tab completion</h3>
+          <p>Paste the beginning of a command in Minecraft and press <strong>Tab</strong>. It is the safest way to discover player names, dimensions, team names, IDs, and mod-specific arguments.</p>
+        </div>
+      </article>
+      <article class="tip-card">
+        <div class="tip-icon">?</div>
+        <div>
+          <h3>Ask the server itself</h3>
+          <p><code>/help</code> shows registered commands. <code>/help &lt;command&gt;</code> can reveal syntax for commands added or changed by the pack.</p>
+        </div>
+      </article>
+      <article class="tip-card">
+        <div class="tip-icon">💾</div>
+        <div>
+          <h3>Save before scary commands</h3>
+          <p>Before large edits, mass unclaims, entity cleanup, or quest changes, use <code>/save-all flush</code> and make sure the automatic backup system is healthy.</p>
+        </div>
+      </article>
+    </section>
+
+    <section class="sources-card">
+      <h2>What this guide covers</h2>
+      <p>This dashboard is built for the Lingango pack and currently covers Minecraft Java 1.20.1 admin commands plus verified command sets from Forge, FTB Essentials, FTB Chunks, FTB Teams, FTB Quests, Waystones, KubeJS and spark. Not every one of the 466 installed mods exposes chat commands.</p>
+      <p class="muted">If the live server tab-completion disagrees with this guide, trust the server — configs and custom KubeJS scripts can change what is registered.</p>
+    </section>
+  </main>
+
+  <footer class="shell footer">
+    <span>Made for the Lingango server 🐸</span>
+    <span>Favorites stay in this browser.</span>
+  </footer>
+
+  <dialog id="commandDialog" class="command-dialog">
+    <form method="dialog" class="dialog-card">
+      <button class="dialog-close" value="cancel" aria-label="Close">×</button>
+      <div class="dialog-badges" id="dialogBadges"></div>
+      <h2 id="dialogTitle"></h2>
+      <p id="dialogDescription" class="dialog-description"></p>
+      <label class="editor-label" for="commandEditor">Edit the placeholders, then copy:</label>
+      <textarea id="commandEditor" rows="4" spellcheck="false"></textarea>
+      <div class="placeholder-help">
+        <span><code>&lt;required&gt;</code> = replace it</span>
+        <span><code>[optional]</code> = optional</span>
+        <span><code>~ ~ ~</code> = current position</span>
+      </div>
+      <div class="dialog-actions">
+        <button class="secondary-button" value="cancel">Close</button>
+        <button class="primary-button" id="dialogCopy" type="button">Copy command</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">Copied!</div>
+
+  <script src="app.js"></script>
+</body>
+</html>
